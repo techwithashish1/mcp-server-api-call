@@ -140,7 +140,7 @@ Add to your Claude Desktop configuration file:
 
 Replace `C:\\path\\to\\mcp-server-deployment-local-ops` with your actual installation path.
 
-**Directly running thru GitHub
+**Directly running thru GitHub**
 
 ```json
 {
