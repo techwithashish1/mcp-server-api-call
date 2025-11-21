@@ -1,7 +1,7 @@
 [project]
 name = "mcp-server-deployment-local-ops"
 version = "0.1.0"
-description = "Add your description here"
+description = "MCP Server with capability of making API Calls"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
