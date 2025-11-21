@@ -12,7 +12,8 @@ def api_get_request(
     url: str,
     api_key: Optional[str] = None,
     headers_json: Optional[str] = None,
-    timeout: int = 30
+    timeout: int = 30,
+    verify_ssl: bool = True
 ) -> dict:
     """
     Makes a generic GET API call.
@@ -22,6 +23,7 @@ def api_get_request(
         api_key: Optional API key for authentication (will be added to headers as 'x-api-key')
         headers_json: Optional JSON string of additional headers (e.g., '{"x-test-id": "Test", "Accept": "application/json"}')
         timeout: Request timeout in seconds (default: 30)
+        verify_ssl: Whether to verify SSL certificates (default: True, set to False for self-signed certs)
         
     Returns:
         dict: JSON response from the API including status_code, headers, and data
@@ -43,7 +45,7 @@ def api_get_request(
             custom_headers = json.loads(headers_json)
             headers.update(custom_headers)        
         # Make GET request
-        response = requests.get(url, headers=headers, timeout=timeout)        
+        response = requests.get(url, headers=headers, timeout=timeout, verify=verify_ssl)        
         # Raise an error for bad status codes
         response.raise_for_status()        
         # Return JSON response
@@ -53,11 +55,15 @@ def api_get_request(
             "data": response.json()
         }        
     except json.JSONDecodeError as e:
-        print(f"Invalid JSON in headers_json parameter: {e}")
-        raise
+        return {
+            "error": "Invalid JSON in headers_json parameter",
+            "details": str(e)
+        }
     except requests.exceptions.RequestException as e:
-        print(f"API GET request failed: {e}")
-        raise
+        return {
+            "error": "API GET request failed",
+            "details": str(e)
+        }
 
 
 @mcp.tool()
@@ -66,7 +72,8 @@ def api_post_request(
     body_json: str,
     api_key: Optional[str] = None,
     headers_json: Optional[str] = None,
-    timeout: int = 30
+    timeout: int = 30,
+    verify_ssl: bool = True
 ) -> dict:
     """
     Makes a generic POST API call.
@@ -77,6 +84,7 @@ def api_post_request(
         api_key: Optional API key for authentication (will be added to headers as 'x-api-key')
         headers_json: Optional JSON string of additional headers (e.g., '{"x-test-id": "Test"}')
         timeout: Request timeout in seconds (default: 30)
+        verify_ssl: Whether to verify SSL certificates (default: True, set to False for self-signed certs)
         
     Returns:
         dict: JSON response from the API including status_code, headers, and data
@@ -100,7 +108,7 @@ def api_post_request(
         # Parse request body
         body = json.loads(body_json)
         # Make POST request
-        response = requests.post(url, headers=headers, json=body, timeout=timeout)
+        response = requests.post(url, headers=headers, json=body, timeout=timeout, verify=verify_ssl)
         # Raise an error for bad status codes
         response.raise_for_status()
         # Return JSON response
@@ -110,8 +118,12 @@ def api_post_request(
             "data": response.json()
         }
     except json.JSONDecodeError as e:
-        print(f"Invalid JSON in parameters: {e}")
-        raise
+        return {
+            "error": "Invalid JSON in parameters",
+            "details": str(e)
+        }
     except requests.exceptions.RequestException as e:
-        print(f"API POST request failed: {e}")
-        raise
+        return {
+            "error": "API POST request failed",
+            "details": str(e)
+        }
