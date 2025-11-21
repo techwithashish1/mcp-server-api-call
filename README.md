@@ -140,6 +140,23 @@ Add to your Claude Desktop configuration file:
 
 Replace `C:\\path\\to\\mcp-server-deployment-local-ops` with your actual installation path.
 
+**Directly running thru GitHub**
+
+```json
+{
+  "mcpServers": {
+    "generic-api-tools": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/techwithashish1/mcp-server-api-call.git",
+        "mcp-server"
+      ]
+    }
+  }
+}
+```
+
 ### Using with Other MCP Clients
 
 This server can be integrated with any MCP-compatible client. Configure the client to run:
